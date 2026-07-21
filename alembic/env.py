@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from Project_2.database import Base
+from database import Base
 import models
 
 # this is the Alembic Config object, which provides
@@ -23,7 +23,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 config.set_main_option(
-    "sqlalchemy.url", 'postgresql://postgres:ahmad%%40512@localhost/store_system'
+    "sqlalchemy.url", 'postgresql://postgres:ahmad%%40512@localhost:5432/store_system'
 )
 
 target_metadata = Base.metadata

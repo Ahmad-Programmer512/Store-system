@@ -4,12 +4,14 @@ from typing import Optional
 
 class Item(BaseModel):
     name: str
+    price: int
     category: str
     quantity: int
 
 class Item_Response(BaseModel):
     id: int
     name: str
+    price: int
     category: str
     quantity: int
     created_at: datetime
@@ -36,3 +38,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[int] = None
+
+class Buying_schema(BaseModel):
+    name: str
+    price: int
+    quantity: int

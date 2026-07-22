@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 import schemas, models, database
 from jose import JWTError, jwt
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl='login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
 SECRET_KEY = "hdhf12121hehgcidnvxbfuxgsf41ru188"
 ALGORITHM = "HS256"
@@ -25,23 +25,33 @@ def verify_access_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
-        id: str = str(payload.get("user_id"))
+        user_id = payload.get("user_id")
 
-        if id is None:
-            return credentials_exception
-        
-        token_data = schemas.TokenData(id=id)
+        if user_id is None:
+            raise credentials_exception
+
+        token_data = schemas.TokenData(id=user_id)
+        return token_data
+
     except JWTError:
-        return credentials_exception
-    
-    return token_data
+        raise credentials_exception
 
-def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(database.get_db)):
-    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
-    detail=f"Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
 
-    token = verify_access_token(token, credentials_exception)
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(database.get_db)
+):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
-    user = db.query(models.User).filter(models.User.id == token.id).first()
+    token_data = verify_access_token(token, credentials_exception)
+
+    user = db.query(models.User).filter(models.User.id == token_data.id).first()
+
+    if user is None:
+        raise credentials_exception
 
     return user

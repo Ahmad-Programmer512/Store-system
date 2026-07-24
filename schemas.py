@@ -14,6 +14,7 @@ class Item_Response(BaseModel):
     price: int
     category: str
     quantity: int
+    image_url: str
     created_at: datetime
     updated_at: datetime
 

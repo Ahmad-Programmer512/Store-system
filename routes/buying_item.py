@@ -8,7 +8,7 @@ router = APIRouter(
 )
 
 @router.post("/")
-def buying(item_details: schemas.Buying_schema, db: Session = Depends(get_db)):
+def buy(item_details: schemas.Buying_schema, db: Session = Depends(get_db)):
     query = db.query(models.Item).filter(models.Item.name == item_details.name).first()
 
     # If query is None
@@ -40,8 +40,8 @@ def buying(item_details: schemas.Buying_schema, db: Session = Depends(get_db)):
 
     return {
         "Item_name": query.name, 
-        "Price": "price",
-        "Total_amount": "amount",
+        "Price": query.price,
+        "Total_amount": item_details.quantity * query.price,
         "Given_amount": "amount",
         "Remaning_amount": item_details.price - total_price
     }

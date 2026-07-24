@@ -9,8 +9,10 @@ class Item(Base):
     price = Column(Integer, nullable=False)
     category = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False)
+    image_url = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"), onupdate=text("now()"))
+
 
 class User(Base):
     __tablename__ = "users"
